@@ -1031,9 +1031,9 @@ RCT_EXPORT_METHOD(reportUpdatedCall:(NSString *)uuidString contactIdentifier:(NS
                 
                 
                 if (isActive) {
-                    NSLog(@"[RNCallKeep] - https://staging-api.listenersapp.com/api/rooms/stop_call");
+                    NSLog(@"[RNCallKeep] - https://listenersapp.com/api/rooms/stop_call");
                     
-                    NSString *urlString=@"https://staging-api.listenersapp.com/api/rooms/stop_call";
+                    NSString *urlString=@"https://listenersapp.com/api/rooms/stop_call";
 
                     NSURL *url = [NSURL URLWithString:urlString];
                     NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:url];
@@ -1056,9 +1056,9 @@ RCT_EXPORT_METHOD(reportUpdatedCall:(NSString *)uuidString contactIdentifier:(NS
                     }];
                     [dataTask resume];
                 } else {
-                    NSLog(@"[RNCallKeep] - https://staging-api.listenersapp.com/api/rooms/reject_call");
+                    NSLog(@"[RNCallKeep] - https://listenersapp.com/api/rooms/reject_call");
                     
-                    NSString *urlString=@"https://staging-api.listenersapp.com/api/rooms/reject_call";
+                    NSString *urlString=@"https://listenersapp.com/api/rooms/reject_call";
 
                     NSURL *url = [NSURL URLWithString:urlString];
                     NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:url];
