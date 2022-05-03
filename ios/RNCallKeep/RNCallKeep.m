@@ -1028,33 +1028,35 @@ RCT_EXPORT_METHOD(reportUpdatedCall:(NSString *)uuidString contactIdentifier:(NS
                 NSString *jsonStr = [[NSString alloc] initWithData:data
                                                         encoding:NSUTF8StringEncoding];
                 NSLog(@"%@",jsonStr);
-                
+                UIApplicationState state = [[UIApplication sharedApplication] applicationState];
                 
                 if (isActive) {
-                    NSLog(@"[RNCallKeep] - https://api.listenersapp.com/api/rooms/stop_call");
-                    
-                    NSString *urlString=@"https://api.listenersapp.com/api/rooms/stop_call";
+                    if (state == UIApplicationStateBackground || state == UIApplicationStateInactive) {
+                        NSLog(@"[RNCallKeep] - https://api.listenersapp.com/api/rooms/stop_call");
+                        
+                        NSString *urlString=@"https://api.listenersapp.com/api/rooms/stop_call";
 
-                    NSURL *url = [NSURL URLWithString:urlString];
-                    NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:url];
+                        NSURL *url = [NSURL URLWithString:urlString];
+                        NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:url];
 
-                    [urlRequest setHTTPMethod:@"POST"];
-                    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-                    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-                    [urlRequest setValue:token forHTTPHeaderField:@"Authorization"];
-                    [urlRequest setHTTPBody: [jsonStr dataUsingEncoding:NSUTF8StringEncoding]];
+                        [urlRequest setHTTPMethod:@"POST"];
+                        [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+                        [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+                        [urlRequest setValue:token forHTTPHeaderField:@"Authorization"];
+                        [urlRequest setHTTPBody: [jsonStr dataUsingEncoding:NSUTF8StringEncoding]];
 
-                    NSURLSessionDataTask * dataTask = [[NSURLSession sharedSession] dataTaskWithRequest:urlRequest completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-                        NSLog(@"data=%@",data);
+                        NSURLSessionDataTask * dataTask = [[NSURLSession sharedSession] dataTaskWithRequest:urlRequest completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+                            NSLog(@"data=%@",data);
 
-                        if (data.length>0 && error==nil) {
-                            NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
-                            NSLog(@"Dict=%@",dict);
-                            [self sendEventWithNameWrapper:RNCallKeepPerformEndCallAction body:@{ @"callUUID": [action.callUUID.UUIDString lowercaseString] }];
-                            [action fulfill];
-                        }
-                    }];
-                    [dataTask resume];
+                            if (data.length>0 && error==nil) {
+                                NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
+                                NSLog(@"Dict=%@",dict);
+                                [self sendEventWithNameWrapper:RNCallKeepPerformEndCallAction body:@{ @"callUUID": [action.callUUID.UUIDString lowercaseString] }];
+                                [action fulfill];
+                            }
+                        }];
+                        [dataTask resume];
+                    }
                 } else {
                     NSLog(@"[RNCallKeep] - https://api.listenersapp.com/api/rooms/reject_call");
                     
